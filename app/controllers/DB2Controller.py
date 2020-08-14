@@ -28,7 +28,10 @@ def connect():
         raise ValueError(cs) from e
     finally:
         if conn:
-            conn.close()
+            try:
+                conn.close()
+            except Exception as ee:
+                raise ValueError(cs) from ee
 
 
 
