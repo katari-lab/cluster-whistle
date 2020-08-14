@@ -11,8 +11,9 @@ def connect():
     port = request.args.get('port') or "50000"
     username = request.args.get('username') or "db2inst1"
     password = request.args.get('password') or "admin123"
-    cs = "DATABASE={};HOSTNAME={};PORT={};PROTOCOL=TCPIP;UID={};PWD={};".format(database, host, port, username,
-                                                                                password)
+    cs = "DATABASE={};HOSTNAME={};PORT={};PROTOCOL=TCPIP;QUERYTIMEOUT=10;CONNECTIONTIMEOUT=10;UID={};PWD={};".format(
+        database, host, port, username, password)
+
     conn = None
     try:
         print("connect to {}".format(cs))
