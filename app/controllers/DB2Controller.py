@@ -11,15 +11,24 @@ def connect():
     port = request.args.get('port') or "50000"
     username = request.args.get('username') or "db2inst1"
     password = request.args.get('password') or "admin123"
-    cs = "DATABASE={};HOSTNAME={};PORT={};PROTOCOL=TCPIP;UID={};PWD={};".format(database, host, port, username, password)
-    print("connect to {}".format(cs))
-    conn = db.connect(cs, "", "")
-    cursor = conn.cursor()
-    cursor.execute("SELECT service_level FROM  TABLE(sysproc.env_get_inst_info()) as INSTANCEINFO")
-    response = dict()
-    for r in cursor.fetchall():
-        response["version"] = r[0]
-    return jsonify(response)
+    cs = "DATABASE={};HOSTNAME={};PORT={};PROTOCOL=TCPIP;UID={};PWD={};".format(database, host, port, username,
+                                                                                password)
+    conn = None
+    try:
+        print("connect to {}".format(cs))
+        conn = db.connect(cs, "", "")
+        cursor = conn.cursor()
+        cursor.execute("SELECT service_level FROM  TABLE(sysproc.env_get_inst_info()) as INSTANCEINFO")
+        response = dict()
+        for r in cursor.fetchall():
+            response["version"] = r[0]
+        return jsonify(response)
+    except Exception as e:
+        raise ValueError(cs) from e
+    finally:
+        if conn:
+            conn.close()
+
 
 
 
