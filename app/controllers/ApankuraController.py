@@ -11,14 +11,14 @@ def service_liveness():
     host = request.args.get('host')
     port = request.args.get('port')
     target = "http://{}:{}/apankura/liveness".format(host, port)
-    response = dict()
-    response["target"] = target
+    model = dict()
+    model["target"] = target
     try:
         logging.info("connect to {}".format(target))
         response = requests.get(target)
         if response.status_code != 200:
             raise ValueError(target)
-        return jsonify(response)
+        return jsonify(model)
     except Exception as e:
         raise ValueError(target) from e
 
@@ -28,8 +28,8 @@ def pods_liveness():
     pods = request.args.get('pods')
     port = request.args.get('port')
     hosts = pods.split(",")
-    response = dict()
-    response["target"] = pods
+    model = dict()
+    model["target"] = pods
     try:
         for host in hosts:
             target = "http://{}:{}/apankura/liveness".format(host, port)
@@ -37,7 +37,7 @@ def pods_liveness():
             response = requests.get(target)
             if response.status_code != 200:
                 raise ValueError(target)
-        return jsonify(response)
+        return jsonify(model)
     except Exception as e:
         raise ValueError(hosts) from e
 
